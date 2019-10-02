@@ -2,8 +2,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 var generator = require('generate-password');
 const axios = require('axios');
-const webConfig = require('./../webConfig');
-const config = require('config');
+
+require('dotenv').config()
+
+const siteURL = process.env.NODE_ENV==="production" ? process.env.SITE_URL : "http://localhost:3000"
 
 const createToken = (user, secret, expiresIn) => {
 
@@ -68,7 +70,7 @@ exports.resolvers = {
         password
       }).save();
 
-      return { token: createToken(newUser, config.get('jwtPrivateKey'), "1hr") };
+      return { token: createToken(newUser, process.env.SECRET_JWT, "1hr") };
     },
 
     signinUser: async (root, { email, password }, { User }) => {
@@ -84,7 +86,7 @@ exports.resolvers = {
         throw new Error('inValid password');
       }
 
-      return { token: createToken(user, config.get('jwtPrivateKey'), "1hr") };
+      return { token: createToken(user, process.env.SECRET_JWT, "1hr") };
 
     },
 
@@ -159,7 +161,7 @@ exports.resolvers = {
           }
 
           /* eslint-disable */
-          axios.post(`${webConfig.siteURL}/password-reset`, data)
+          axios.post(`${siteURL}/password-reset`, data)
             .then(function (response) {
               // console.log('Email sent!');
             })

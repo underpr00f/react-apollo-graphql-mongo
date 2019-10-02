@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import 'isomorphic-unfetch';
-import config from 'config';
+
 import path from 'path';
 import fs from 'fs';
 import express from 'express';
@@ -31,9 +31,11 @@ import HTML from './src/helpers/renderer';
 import { typeDefs } from './src/schema';
 import { resolvers } from './src/resolvers';
 import User from './src/models/User';
+import { siteURL } from './src/constants';
+require('dotenv').config()
 
 // Connect MongoDB
-mongoose.connect(config.get('dbString'), 
+mongoose.connect("mongodb+srv://"+process.env.MONGO_ATLAS_USER+":"+process.env.MONGO_ATLAS_PASS+"@"+process.env.MONGO_ATLAS_CLUSTER+".mongodb.net/"+process.env.MONGO_ATLAS_DB+"?retryWrites=true&w=majority", 
   { 
     useNewUrlParser: true, 
     useCreateIndex: true,
@@ -45,14 +47,13 @@ mongoose.connect(config.get('dbString'),
 });
 
 // check env vars
-require('./config')();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: `${webConfig.siteURL}`,
+    origin: `${siteURL}`,
     credentials: true
   })
 );
@@ -84,7 +85,7 @@ app.use(async (req, res, next) => {
   const token = req.cookies.token ? req.cookies.token : null;
   if (token !== null) {
     try {
-      const currentUser = await jwt.verify(token, config.get('jwtPrivateKey'));
+      const currentUser = await jwt.verify(token, process.env.SECRET_JWT);
       req.currentUser = currentUser;
     } catch (err) {
       //   console.error(err);
@@ -125,7 +126,7 @@ app.get(['*/:param', '*'], (req, res) => {
     // Remember that this is the interface the SSR server will use to connect to the
     // API server, so we need to ensure it isn't firewalled, etc
     link: createHttpLink({
-      uri: `${webConfig.siteURL}/graphql`,
+      uri: `${siteURL}/graphql`,
       credentials: 'same-origin',
       headers: {
         cookie: req.header('Cookie'),
@@ -167,36 +168,49 @@ app.get(['*/:param', '*'], (req, res) => {
 app.post('/password-reset', (req, response) => {
 
   var mailer = nodemailer.createTransport({
-    host: config.get('mailServer.host'),
+    service: 'Gmail',
     auth: {
-      user: config.get('mailServer.auth.user'),
-      pass: config.get('mailServer.auth.pass')
+      user: process.env.EMAIL_HOST,
+      pass: process.env.EMAIL_PASS
     }
   });
-
-  mailer.use('compile', hbs({
+  const handlebarOptions = {
     viewEngine: {
       extName: '.hbs',
-      partialsDir: 'build/public/assets/email_templates'
-    },    
-    viewPath: 'build/public/assets/email_templates'
-  }));
+      partialsDir: 'build/public/assets/email_templates',
+      layoutsDir: 'build/public/assets/email_templates',
+      defaultLayout: 'passwordReset.hbs',
+    },
+    viewPath: 'build/public/assets/email_templates',
+    extName: '.hbs',
+  };
 
-  mailer.sendMail({
-    from: config.get('mailServer.from'),
-    to: req.body.email,
-    subject: config.get('mailServer.subject'),
-    template: 'passwordReset',
-    context: {
-      email: req.body.email,
-      password: req.body.generatedPassword
-    }
-  }, function (err, res) {
-    if (err) {
-      // console.log(err)
-      return response.status(500).send('500 - Internal Server Error')
-    }
-    response.status(200).send('200 - The request has succeeded.')
+  mailer.use('compile', hbs(handlebarOptions));  
+
+  var mailOptions = {
+      from: process.env.EMAIL_FROM, // sender address
+      to: req.body.email, // list of receivers
+      subject: process.env.EMAIL_SUBJECT, // Subject line
+      template: 'passwordReset',
+      context: {
+        email: req.body.email,
+        password: req.body.generatedPassword,
+        url: `${siteURL}`,
+      }
+  }
+  console.log('created', mailOptions);
+  // send mail with defined transport object
+  mailer.sendMail(mailOptions, function(error, response){
+      if(error){
+          console.log(error);
+          return response.status(500).send('500 - Internal Server Error')
+      }else{
+          console.log("Message sent");
+          return response.status(200).send('200 - Message sent')
+      }
+
+      // if you don't want to use this transport object anymore, uncomment following line
+      //smtpTransport.close(); // shut down the connection pool, no more messages
   });
 
 });

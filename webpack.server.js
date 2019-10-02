@@ -1,11 +1,11 @@
 const path = require('path');
-const webConfig = require('./webConfig');
+
 const webpackNodeExternals = require('webpack-node-externals');
 
 module.exports = {
 
   // production || development
-  mode: webConfig.environment,
+  mode: process.env.NODE_ENV||'production',
 
   // Inform webpack that we're building a bundle
   // for nodeJS, rather then for the browser
