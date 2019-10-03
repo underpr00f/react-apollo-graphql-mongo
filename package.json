@@ -7,7 +7,7 @@
     "heroku-postbuild": "webpack --config webpack.server.js && webpack --config webpack.client.js",
     "build": "webpack --config webpack.server.js && webpack --config webpack.client.js",
     "serve": "node build/bundle.js",
-    "dev": "npm-run-all --parallel dev:*",
+    "dev": "NODE_ENV=development npm-run-all --parallel dev:*",
     "dev:build-server": "webpack --config webpack.server.js --watch",
     "dev:build-client": "webpack --config webpack.client.js --watch",
     "dev:server": "nodemon --watch build --exec node build/bundle.js",

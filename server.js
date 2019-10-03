@@ -31,9 +31,9 @@ import HTML from './src/helpers/renderer';
 import { typeDefs } from './src/schema';
 import { resolvers } from './src/resolvers';
 import User from './src/models/User';
-import { siteURL } from './src/constants';
-require('dotenv').config()
 
+require('dotenv').config()
+import { siteURL } from './src/constants';
 // Connect MongoDB
 mongoose.connect("mongodb+srv://"+process.env.MONGO_ATLAS_USER+":"+process.env.MONGO_ATLAS_PASS+"@"+process.env.MONGO_ATLAS_CLUSTER+".mongodb.net/"+process.env.MONGO_ATLAS_DB+"?retryWrites=true&w=majority", 
   { 
