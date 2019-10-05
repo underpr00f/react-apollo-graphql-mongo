@@ -6,7 +6,9 @@ import { withRouter } from 'react-router-dom';
 import CKEditor from 'react-ckeditor-wrapper';
 import axios from 'axios';
 import toastr from 'toastr';
-import webConfig from './../../../webConfig';
+// import webConfig from './../../../webConfig';
+
+import { siteURL } from './../../constants';
 
 const initialState = {
   bio: '',
@@ -146,10 +148,10 @@ class EditProfileMutations extends React.Component {
 
                     <div className="column column_6_12 image">
                       {!this.props.session.getCurrentUser.profileImage &&
-                        <img src={`${webConfig.siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
+                        <img src={`${siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
                       }
                       {this.props.session.getCurrentUser.profileImage &&
-                        <img src={`${webConfig.siteURL}/user-uploads/${this.props.session.getCurrentUser.profileImage}`} />
+                        <img src={`${siteURL}/user-uploads/${this.props.session.getCurrentUser.profileImage}`} />
                       }
                     </div>
 

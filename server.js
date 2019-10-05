@@ -31,6 +31,7 @@ import HTML from './src/helpers/renderer';
 import { typeDefs } from './src/schema';
 import { resolvers } from './src/resolvers';
 import User from './src/models/User';
+const compression = require('compression')
 
 require('dotenv').config()
 import { siteURL } from './src/constants';
@@ -50,6 +51,7 @@ mongoose.connect("mongodb+srv://"+process.env.MONGO_ATLAS_USER+":"+process.env.M
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(compression());
 
 app.use(
   cors({
@@ -262,6 +264,5 @@ app.post('/upload', function (req, res) {
   });
 
 });
-
 
 app.listen(PORT, () => console.log(`App running on port ${PORT}`));

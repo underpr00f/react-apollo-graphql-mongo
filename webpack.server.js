@@ -34,7 +34,9 @@ module.exports = {
       },
     ]
   },
-
+  node: {
+    fs: 'empty'
+  },
   // Tell webpack not to bundle any libraries that exist in the 'node_modules' folder
   // into the server bundle
   externals: [webpackNodeExternals()]

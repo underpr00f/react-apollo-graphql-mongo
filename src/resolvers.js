@@ -4,10 +4,10 @@ var generator = require('generate-password');
 const axios = require('axios');
 
 require('dotenv').config()
-
+const siteURL = require('./constants').siteURL;
 // const siteURL = process.env.NODE_ENV==="production" ? process.env.SITE_URL : "http://localhost:3000"
 // const siteURL = "http://localhost:3000"
-const siteURL = process.env.SITE_URL || "http://localhost:3000"
+// const siteURL = process.env.SITE_URL || "http://localhost:3000"
 
 const createToken = (user, secret, expiresIn) => {
 
@@ -165,10 +165,10 @@ exports.resolvers = {
           /* eslint-disable */
           axios.post(`${siteURL}/password-reset`, data)
             .then(function (response) {
-              // console.log('Email sent!');
+              console.log('Email sent!');
             })
             .catch(function (error) {
-              // console.log(error);
+              console.log(error);
             });
           /* eslint-enable */
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { PROFILE_PAGE } from './../../queries';
 import { Query } from 'react-apollo';
-import webConfig from './../../../webConfig';
-import { Helmet } from 'react-helmet';
 
+import { Helmet } from 'react-helmet';
+import { siteURL } from './../../constants';
 export class UnconnectedUser extends Component {
 
   constructor(props) {
@@ -34,10 +34,10 @@ export class UnconnectedUser extends Component {
                 <div className="column column_4_12">
                   <div className="profileImage">
                     {!data.profilePage.profileImage &&
-                      <img src={`${webConfig.siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
+                      <img src={`${siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
                     }
                     {data.profilePage.profileImage &&
-                      <img src={`${webConfig.siteURL}/user-uploads/${data.profilePage.profileImage}`} />
+                      <img src={`${siteURL}/user-uploads/${data.profilePage.profileImage}`} />
                     }
                   </div>
                   <div className="user">

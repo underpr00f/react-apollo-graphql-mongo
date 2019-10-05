@@ -1,9 +1,10 @@
 import React, { Fragment, Component } from 'react';
 import { GET_ALL_USERS } from './../../queries';
 import { Query } from 'react-apollo';
-import webConfig from './../../../webConfig';
+// import webConfig from './../../../webConfig';
 import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
+import { siteURL } from './../../constants';
 
 export class UnconnectedUsers extends Component {
 
@@ -53,7 +54,7 @@ export class UnconnectedUsers extends Component {
                           <div className="wrap">
                             <div className="profile_image">
                               {!user.profileImage &&
-                                <img src={`${webConfig.siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
+                                <img src={`${siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
                               }
                               {user.profileImage &&
                                 <img src={`user-uploads/${user.profileImage}`} />

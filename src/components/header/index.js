@@ -1,8 +1,10 @@
 import React from 'react';
-import webConfig from './../../../webConfig';
+// import webConfig from './../../../webConfig';
 import { NavLink } from 'react-router-dom';
 
 import withSession from './../../hoc/withSession';
+
+import { siteURL } from './../../constants';
 
 export class UnconnectedHeader extends React.Component {
 
@@ -26,10 +28,10 @@ export class UnconnectedHeader extends React.Component {
               <div className="wrap">
                 <div className="profile_img">
                   {!this.props.session.getCurrentUser.profileImage &&
-                    <img src={`${webConfig.siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
+                    <img src={`${siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
                   }
                   {this.props.session.getCurrentUser.profileImage &&
-                    <img src={`${webConfig.siteURL}/user-uploads/${this.props.session.getCurrentUser.profileImage}`} />
+                    <img src={`${siteURL}/user-uploads/${this.props.session.getCurrentUser.profileImage}`} />
                   }
                 </div>
                 <div className="caption">

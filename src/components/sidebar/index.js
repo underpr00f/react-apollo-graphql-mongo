@@ -1,8 +1,9 @@
 import React, { Fragment, Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import webConfig from './../../../webConfig';
+// import webConfig from './../../../webConfig';
 import withSession from './../../hoc/withSession';
 import classNames from 'classnames';
+import { siteURL } from './../../constants';
 
 export class UnconnectedSideBar extends Component {
 
@@ -37,7 +38,7 @@ export class UnconnectedSideBar extends Component {
       <Fragment>
         <div className="logo_wrapper">
           <NavLink to="/" onClick={() => this.mobile_nav_button()}>
-            <img src={`${webConfig.siteURL}/assets/graphics/logo.png`} />
+            <img src={`${siteURL}/assets/graphics/logo.png`} />
           </NavLink>
         </div>
 

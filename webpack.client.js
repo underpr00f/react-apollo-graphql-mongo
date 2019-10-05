@@ -1,11 +1,14 @@
 const path = require('path');
-const webConfig = require('./webConfig');
+// const webConfig = require('./webConfig');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
 
   // production || development
-  mode: webConfig.environment,
+  mode: process.env.NODE_ENV||'production',
 
   // Tell webpack the root file of our
   // server application 
@@ -51,13 +54,23 @@ module.exports = {
       }
     ]
   },
+  node: {
+    fs: 'empty'
+  },
   plugins: [
     new CopyWebpackPlugin([
       { from: 'src/assets/graphics', to: 'assets/graphics' },
       { from: 'src/assets/email_templates', to: 'assets/email_templates' }
-    ])
+    ]),
+    new CompressionPlugin({
+      filename: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
+    new CleanWebpackPlugin()
   ]
-
 };
 
 
