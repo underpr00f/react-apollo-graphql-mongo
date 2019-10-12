@@ -35,6 +35,7 @@ const compression = require('compression')
 
 require('dotenv').config()
 import { siteURL } from './src/constants';
+let manifest = require('./build/public/asset-manifest.json');
 // Connect MongoDB
 mongoose.connect("mongodb+srv://"+process.env.MONGO_ATLAS_USER+":"+process.env.MONGO_ATLAS_PASS+"@"+process.env.MONGO_ATLAS_CLUSTER+".mongodb.net/"+process.env.MONGO_ATLAS_DB+"?retryWrites=true&w=majority", 
   { 
@@ -157,7 +158,7 @@ app.get(['*/:param', '*'], (req, res) => {
     const helmet = Helmet.renderStatic();
 
     const initialState = client.extract();
-    const html = <HTML content={content} state={initialState} helmet={helmet} />;
+    const html = <HTML content={content} state={initialState} helmet={helmet} assets={manifest}/>;
 
     res.status(200);
     res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
@@ -176,15 +177,16 @@ app.post('/password-reset', (req, response) => {
       pass: process.env.EMAIL_PASS
     }
   });
+
   const handlebarOptions = {
     viewEngine: {
       extName: '.hbs',
       partialsDir: 'build/public/assets/email_templates',
       layoutsDir: 'build/public/assets/email_templates',
-      defaultLayout: 'passwordReset.hbs',
+      defaultLayout: 'passwordReset.hbs'
     },
     viewPath: 'build/public/assets/email_templates',
-    extName: '.hbs',
+    extName: '.hbs'
   };
 
   mailer.use('compile', hbs(handlebarOptions));  
@@ -200,9 +202,8 @@ app.post('/password-reset', (req, response) => {
         url: `${siteURL}`,
       }
   }
-  console.log('created', mailOptions);
   // send mail with defined transport object
-  mailer.sendMail(mailOptions, function(error, response){
+  mailer.sendMail(mailOptions, function(error, res){
       if(error){
           console.log(error);
           return response.status(500).send('500 - Internal Server Error')

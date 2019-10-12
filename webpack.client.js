@@ -5,21 +5,31 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CompressionPlugin = require('compression-webpack-plugin');
 
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ManifestPlugin = require('webpack-manifest-plugin');
+// const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+
+const isDev = process.env.NODE_ENV && process.env.NODE_ENV === "development";
+
 module.exports = {
 
   // production || development
-  mode: process.env.NODE_ENV||'production',
-
+  mode: isDev ? 'development': 'production',
   // Tell webpack the root file of our
   // server application 
-  entry: ['./src/client.js', './src/assets/scss/styles.scss'],
+    
+
+  entry: [
+    './src/client.js', 
+    './src/assets/scss/styles.scss'
+  ],
 
   // Tell webpack where to put the output file
   // that is generated
   output: {
-    filename: 'client_bundle.js',
+    filename: '[name].[hash:8].js',
     path: path.resolve(__dirname, 'build/public'),
-    publicPath: '/build/public'
+    publicPath: '/build/public/'
   },
 
   module: {
@@ -32,32 +42,43 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/,
+        test: /\.(sa|sc|c)ss$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: MiniCssExtractPlugin.loader, //3. inject
             options: {
-              name: '[name].min.css',
-              outputPath: 'assets/css/'
+              hmr: isDev,
+              reloadAll: isDev
             }
           },
-          {
-            loader: 'extract-loader'
-          },
-          {
-            loader: 'css-loader'
-          },
-          {
-            loader: 'sass-loader'
-          }
+          "css-loader", //2. Turns css into commonjs
+          "sass-loader" //1. Turns sass into css
         ]
       }
     ]
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          name: 'vendor',
+          test: /node_modules/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
   },
   node: {
     fs: 'empty'
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: 'assets/css/[name].[contenthash:8].min.css',
+      chunkFilename: 'assets/css/[name].[contenthash:8].chunk.css'
+    }),
     new CopyWebpackPlugin([
       { from: 'src/assets/graphics', to: 'assets/graphics' },
       { from: 'src/assets/email_templates', to: 'assets/email_templates' }
@@ -69,7 +90,13 @@ module.exports = {
       threshold: 10240,
       minRatio: 0.8
     }),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new ManifestPlugin({
+        fileName: 'asset-manifest.json',
+        publicPath: '/'
+      }        
+    )
+
   ]
 };
 

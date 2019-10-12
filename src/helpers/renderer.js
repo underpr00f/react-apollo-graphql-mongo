@@ -1,9 +1,12 @@
 import React from 'react';
 import { siteURL } from '../constants';
-const HTML = ({ content, state, helmet }) => {
+const HTML = ({ content, state, helmet, assets }) => {
 
   const htmlAttrs = helmet.htmlAttributes.toComponent();
   const bodyAttrs = helmet.bodyAttributes.toComponent();
+  const mainJS = assets['main.js'];
+  const vendorJS = assets['vendor.js'];
+  const mainCSS = assets['main.css'];
 
   return (
     <html lang="en" {...htmlAttrs}>
@@ -14,7 +17,7 @@ const HTML = ({ content, state, helmet }) => {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     ${helmet.meta.toString()}
     <link rel="shortcut icon" href="${siteURL}/assets/graphics/favicon.ico">
-    <link href="${siteURL}/assets/css/styles.min.css" rel="stylesheet" type="text/css" />
+    <link href="${siteURL}${mainCSS}" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossOrigin="anonymous" />
     `}}></head>
@@ -24,7 +27,8 @@ const HTML = ({ content, state, helmet }) => {
           __html: `window.__APOLLO_STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')};`,
         }} />
         <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
-        <script src={`${siteURL}/client_bundle.js`}></script>
+        <script src={`${siteURL}${vendorJS}`}></script>
+        <script src={`${siteURL}${mainJS}`}></script>
       </body>
     </html>
   )

@@ -5,9 +5,6 @@ const axios = require('axios');
 
 require('dotenv').config()
 const siteURL = require('./constants').siteURL;
-// const siteURL = process.env.NODE_ENV==="production" ? process.env.SITE_URL : "http://localhost:3000"
-// const siteURL = "http://localhost:3000"
-// const siteURL = process.env.SITE_URL || "http://localhost:3000"
 
 const createToken = (user, secret, expiresIn) => {
 
