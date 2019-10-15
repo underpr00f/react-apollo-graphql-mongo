@@ -162,6 +162,8 @@ app.get(['*/:param', '*'], (req, res) => {
       </StaticRouter>
     </ApolloProvider>
   );
+  const folders = fs.readdirSync(`${process.cwd()}`);
+  console.log("folders", folders)
   // const manifest = require('./build/public/asset-manifest.json');
   // Handle queries etc.. before sending raw html
   getDataFromTree(App).then(() => {
@@ -170,7 +172,7 @@ app.get(['*/:param', '*'], (req, res) => {
     const helmet = Helmet.renderStatic();
 
     const initialState = client.extract();
-    const html = <HTML content={content} state={initialState} helmet={helmet} />;
+    const html = <HTML content={content} state={initialState} helmet={helmet} folders={folders} />;
 
     res.status(200);
     res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
