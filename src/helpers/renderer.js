@@ -1,14 +1,14 @@
 import React from 'react';
 import { siteURL } from '../constants';
-const HTML = ({ content, state, helmet, assets, folders }) => {
+const HTML = ({ content, state, helmet, folders }) => {
 
   const htmlAttrs = helmet.htmlAttributes.toComponent();
   const bodyAttrs = helmet.bodyAttributes.toComponent();
   // const mainJS = assets['main.js'];
   // const vendorJS = assets['vendor.js'];
   // const mainCSS = assets['main.css'];
-  console.log("folders", folders)
-  console.log("HEY")
+  // console.log("folders", folders)
+  // console.log("HEY")
   return (
     <html lang="en" {...htmlAttrs}>
       <head dangerouslySetInnerHTML={{
