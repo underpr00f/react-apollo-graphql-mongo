@@ -35,14 +35,7 @@ const compression = require('compression')
 
 require('dotenv').config()
 import { siteURL } from './src/constants';
-
-let manifest = {};
-
-if (fs.readdirSync('./build/public/').includes('asset-manifest.json')) {
-  console.log(fs.readdirSync('./build/public/'))
-  manifest = require('./build/public/asset-manifest.json')
-} 
-
+let manifest = require('./build/public/asset-manifest.json');
 
 // Connect MongoDB
 mongoose.connect("mongodb+srv://"+process.env.MONGO_ATLAS_USER+":"+process.env.MONGO_ATLAS_PASS+"@"+process.env.MONGO_ATLAS_CLUSTER+".mongodb.net/"+process.env.MONGO_ATLAS_DB+"?retryWrites=true&w=majority", 
