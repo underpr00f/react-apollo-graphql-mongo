@@ -162,7 +162,7 @@ app.get(['*/:param', '*'], (req, res) => {
       </StaticRouter>
     </ApolloProvider>
   );
-  const manifest = require('./build/public/asset-manifest.json');
+  // const manifest = require('./build/public/asset-manifest.json');
   // Handle queries etc.. before sending raw html
   getDataFromTree(App).then(() => {
     
@@ -170,7 +170,7 @@ app.get(['*/:param', '*'], (req, res) => {
     const helmet = Helmet.renderStatic();
 
     const initialState = client.extract();
-    const html = <HTML content={content} state={initialState} helmet={helmet} assets={manifest}/>;
+    const html = <HTML content={content} state={initialState} helmet={helmet} />;
 
     res.status(200);
     res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
