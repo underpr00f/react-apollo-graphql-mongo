@@ -1,6 +1,6 @@
 import React from 'react';
 import { siteURL } from '../constants';
-const HTML = ({ content, state, helmet, folders }) => {
+const HTML = ({ content, state, helmet }) => {
 
   const htmlAttrs = helmet.htmlAttributes.toComponent();
   const bodyAttrs = helmet.bodyAttributes.toComponent();
