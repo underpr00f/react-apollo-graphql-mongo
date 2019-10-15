@@ -35,7 +35,18 @@ const compression = require('compression')
 
 require('dotenv').config()
 import { siteURL } from './src/constants';
-let manifest = require('./build/public/asset-manifest.json');
+
+
+// let manifest = require('./build/public/asset-manifest.json');
+// const manifestPath = `${process.cwd()}/build/public/asset-manifest.json`
+// const manifest = require(manifestPath)
+
+// const manifest = require(''+manifestPath)
+//read the manifest.json file
+// const manifest = readFileSync(manifestPath);
+
+// // js and css bundle maping to objects
+// const jsBundle = manifest['main.js'];
 
 // Connect MongoDB
 mongoose.connect("mongodb+srv://"+process.env.MONGO_ATLAS_USER+":"+process.env.MONGO_ATLAS_PASS+"@"+process.env.MONGO_ATLAS_CLUSTER+".mongodb.net/"+process.env.MONGO_ATLAS_DB+"?retryWrites=true&w=majority", 
@@ -151,10 +162,10 @@ app.get(['*/:param', '*'], (req, res) => {
       </StaticRouter>
     </ApolloProvider>
   );
-
+  const manifest = require('./build/public/asset-manifest.json');
   // Handle queries etc.. before sending raw html
   getDataFromTree(App).then(() => {
-
+    
     const content = ReactDOM.renderToString(App);
     const helmet = Helmet.renderStatic();
 

@@ -93,8 +93,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new ManifestPlugin({
         fileName: 'asset-manifest.json',
-        publicPath: '/build/public/',
-        basePath: '/build/public/'
+        publicPath: '/'
       }        
     )
 
