@@ -5,7 +5,24 @@ const HTML = ({ content, state, helmet, assets }) => {
   const htmlAttrs = helmet.htmlAttributes.toComponent();
   const bodyAttrs = helmet.bodyAttributes.toComponent();
   const mainJS = assets['main.js'];
-  const vendorJS = assets['vendor.js'];
+
+  // vendors js with npm without gz
+  const propertyNames = Object.keys(assets).filter(function (propertyName) {
+      return propertyName.indexOf("npm.") === 0 && !propertyName.endsWith(".js.gz");
+  });
+  const filteredVendor = Object.keys(assets)
+    .filter(key => propertyNames.includes(key))
+    .reduce((obj, key) => {
+      return {
+        ...obj,
+        [key]: assets[key]
+      };
+    }, {});
+  var result = Object.keys(filteredVendor).map(function(key) {
+    return [filteredVendor[key]];
+  });
+  console.log(result);
+ 
   const mainCSS = assets['main.css'];
 
   return (
@@ -27,7 +44,7 @@ const HTML = ({ content, state, helmet, assets }) => {
           __html: `window.__APOLLO_STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')};`,
         }} />
         <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
-        <script src={`${siteURL}${vendorJS}`}></script>
+        {result.map((object, i) => <script src={siteURL+object} key={i} />)}
         <script src={`${siteURL}${mainJS}`}></script>
       </body>
     </html>
