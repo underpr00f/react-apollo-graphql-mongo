@@ -8,7 +8,7 @@ const HTML = ({ content, state, helmet, assets }) => {
 
   // vendors js with npm without gz
   const propertyNames = Object.keys(assets).filter(function (propertyName) {
-      return propertyName.indexOf("npm.") === 0 && !propertyName.endsWith(".js.gz");
+    return propertyName.indexOf("npm.") === 0 && !propertyName.endsWith(".js.gz");
   });
   const filteredVendor = Object.keys(assets)
     .filter(key => propertyNames.includes(key))
@@ -21,7 +21,6 @@ const HTML = ({ content, state, helmet, assets }) => {
   var result = Object.keys(filteredVendor).map(function(key) {
     return [filteredVendor[key]];
   });
-  console.log(result);
  
   const mainCSS = assets['main.css'];
 
