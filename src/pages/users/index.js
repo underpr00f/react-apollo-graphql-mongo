@@ -57,7 +57,7 @@ export class UnconnectedUsers extends Component {
                                 <img src={`${siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
                               }
                               {user.profileImage &&
-                                <img src={`user-uploads/${user.profileImage}`} />
+                                <img src={`${user.profileImage}`} />
                               }
                             </div>
                             <div className="title">

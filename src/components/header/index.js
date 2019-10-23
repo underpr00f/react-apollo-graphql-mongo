@@ -31,7 +31,7 @@ export class UnconnectedHeader extends React.Component {
                     <img src={`${siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
                   }
                   {this.props.session.getCurrentUser.profileImage &&
-                    <img src={`${siteURL}/user-uploads/${this.props.session.getCurrentUser.profileImage}`} />
+                    <img src={`${this.props.session.getCurrentUser.profileImage}`} />
                   }
                 </div>
                 <div className="caption">

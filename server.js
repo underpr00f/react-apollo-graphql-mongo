@@ -34,16 +34,14 @@ import User from './src/models/User';
 const compression = require('compression')
 
 require('dotenv').config()
-import { siteURL } from './src/constants';
+import { siteURL, CLOUD_SETTINGS } from './src/constants';
+const cloudinary = require("cloudinary").v2;
 
-
-// let manifest = require('./build/public/asset-manifest.json');
-// const manifestPath = `${process.cwd()}/build/public/asset-manifest.json`
-// const manifest = require(manifestPath)
-
-// const manifest = require(''+manifestPath)
-//read the manifest.json file
-// const manifest = readFileSync(manifestPath);
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_SECRET
+});
 
 // // js and css bundle maping to objects
 // const jsBundle = manifest['main.js'];
@@ -72,10 +70,17 @@ app.use(
     credentials: true
   })
 );
+// limit 4 mb upload
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ 
+  limit: '2mb' 
+}));
+app.use(bodyParser.urlencoded({ 
+  extended: true,
+  limit: '2mb' 
+}));
 app.use(cookieParser())
+
 
 app.use("/", express.static("build/public"));
 
@@ -252,7 +257,7 @@ app.post('/upload', function (req, res) {
   let profilePic = req.files.selectedFile;
   let file_ext = getFileType(profilePic.mimetype);
   let tempFileName = randomstring.generate(21) + file_ext;
-
+  
   const fileExists = current_files.includes(tempFileName);
 
   while (fileExists) {
@@ -264,21 +269,26 @@ app.post('/upload', function (req, res) {
     }
 
   }
-
+ 
   let send_filePath = './user-uploads/profile-images/' + tempFileName;
 
   profilePic.mv(send_filePath, function (err) {
-
     if (err) return res.status(500).send(err);
-
-    const res_dataObj = {
-      "newFileName": tempFileName
-    }
-
-    res.send(res_dataObj);
-
   });
 
+  // cloudinary
+  cloudinary.uploader.upload(send_filePath, function(error, result) {
+    if (error) {
+      return res.status(500).send(error);
+    }
+    fs.unlink(send_filePath,function(err){
+        if(err) return console.log(err);
+        console.log('file deleted successfully');
+    });     
+    return res.send({
+      "newFileName": result.url
+    });
+  });
 });
 
 app.listen(PORT, () => console.log(`App running on port ${PORT}`));

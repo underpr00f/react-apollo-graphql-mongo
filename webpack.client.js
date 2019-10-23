@@ -8,6 +8,8 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ManifestPlugin = require('webpack-manifest-plugin');
 // const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const getEnvironmentConstants = require('./Utils/getEnvironmentConstants');
+const webpack = require('webpack');
 
 const isDev = process.env.NODE_ENV && process.env.NODE_ENV === "development";
 
@@ -59,9 +61,6 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
-      maxInitialRequests: Infinity,
-      minSize: 0,
       cacheGroups: {
         vendor: {
           name: 'vendor',
@@ -106,8 +105,11 @@ module.exports = {
         fileName: 'asset-manifest.json',
         publicPath: '/'
       }        
-    )
-
+    ),
+    new webpack.DefinePlugin({ 
+      'process.env' : getEnvironmentConstants(),
+      'process.env.NODE_ENV' : isDev ? JSON.stringify('development'): JSON.stringify('production') 
+    })
   ]
 };
 

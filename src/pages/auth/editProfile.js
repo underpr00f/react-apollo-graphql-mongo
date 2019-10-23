@@ -21,7 +21,6 @@ class EditProfile extends React.Component {
   }
 
   render() {
-
     return (
       <div className="column column_12_12">
         {this.head()}

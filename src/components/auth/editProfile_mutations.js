@@ -6,9 +6,8 @@ import { withRouter } from 'react-router-dom';
 import CKEditor from 'react-ckeditor-wrapper';
 import axios from 'axios';
 import toastr from 'toastr';
-// import webConfig from './../../../webConfig';
 
-import { siteURL } from './../../constants';
+import { siteURL, CLOUD_SETTINGS } from './../../constants';
 
 const initialState = {
   bio: '',
@@ -71,6 +70,7 @@ class EditProfileMutations extends React.Component {
 
   selectedFile(e) {
     e.preventDefault();
+
     let selectedFile = e.target.files[0]
     this.setState({
       selectedFile
@@ -78,11 +78,15 @@ class EditProfileMutations extends React.Component {
   }
 
   fileUPload(e, selectedFile) {
-
     e.preventDefault();
     const data = new FormData();
     const file = this.state.selectedFile;
+
     data.append('selectedFile', file);
+    // for cloudinary
+    // data.append('file', file);
+    data.append('upload_preset', CLOUD_SETTINGS.UPLOAD_PRESET);
+    // axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_SETTINGS.CLOUD_NAME}/image/upload`, data).then(({ data: { newFileName } }) => {
 
     axios.post('/upload', data).then(({ data: { newFileName } }) => {
 
@@ -95,19 +99,18 @@ class EditProfileMutations extends React.Component {
         this.props.history.push('/edit-profile');
         toastr.success('We have updated your profile image!', 'Saved!');
 
-      }).catch(() => {
-        // console.log(err);
+      }).catch((err) => {
+        console.log(err);
       });
 
-    }).catch(() => {
-      // console.log(err);
+    }).catch((err) => {
+      console.log(err);
     });
 
 
   }
 
   render() {
-
     const { bio, newFile } = this.state
     const userName = this.props.session.getCurrentUser.userName;
     this.state;
@@ -151,7 +154,7 @@ class EditProfileMutations extends React.Component {
                         <img src={`${siteURL}/assets/graphics/abstract_patterns/texture.jpg`} />
                       }
                       {this.props.session.getCurrentUser.profileImage &&
-                        <img src={`${siteURL}/user-uploads/${this.props.session.getCurrentUser.profileImage}`} />
+                        <img src={`${this.props.session.getCurrentUser.profileImage}`} />
                       }
                     </div>
 
@@ -159,7 +162,7 @@ class EditProfileMutations extends React.Component {
                       <h3>Profile image: </h3>
                       <div className="file_input">
 
-                        <input type="file" accept=".jpg, .png" name="profilePic" onChange={e => this.selectedFile(e)} />
+                        <input type="file" accept=".jpg, .png" name="profilePic" onChange={e => this.selectedFile(e)}/>
 
                       </div>
 

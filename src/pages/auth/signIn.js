@@ -66,7 +66,6 @@ class Signin extends React.Component {
   }
 
   render() {
-
     const { email, password } = this.state
     this.state;
 
