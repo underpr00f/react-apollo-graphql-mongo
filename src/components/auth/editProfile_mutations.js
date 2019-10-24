@@ -98,11 +98,11 @@ class EditProfileMutations extends React.Component {
         this.props.history.push('/edit-profile');
         toastr.success('We have updated your profile image!', 'Saved!');
 
-      }).catch((err) => {
+      }).catch(() => {
         // console.log(err);
       });
 
-    }).catch((err) => {
+    }).catch(() => {
       // console.log(err);
     });
 
