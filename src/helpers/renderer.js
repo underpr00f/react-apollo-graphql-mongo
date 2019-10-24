@@ -1,5 +1,5 @@
 import React from 'react';
-import { siteURL, CLOUD_SETTINGS } from '../constants';
+import { siteURL } from '../constants';
 const HTML = ({ content, state, helmet, assets }) => {
 
   const htmlAttrs = helmet.htmlAttributes.toComponent();
@@ -25,8 +25,7 @@ const HTML = ({ content, state, helmet, assets }) => {
     <link href="${siteURL}${mainCSS}" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossOrigin="anonymous" />
-    `}}>
-    </head>
+    `}}></head>
       <body {...bodyAttrs}>
         <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
         <script dangerouslySetInnerHTML={{

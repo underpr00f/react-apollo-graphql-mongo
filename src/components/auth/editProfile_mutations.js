@@ -83,10 +83,9 @@ class EditProfileMutations extends React.Component {
     const file = this.state.selectedFile;
 
     data.append('selectedFile', file);
+    
     // for cloudinary
-    // data.append('file', file);
     data.append('upload_preset', CLOUD_SETTINGS.UPLOAD_PRESET);
-    // axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_SETTINGS.CLOUD_NAME}/image/upload`, data).then(({ data: { newFileName } }) => {
 
     axios.post('/upload', data).then(({ data: { newFileName } }) => {
 
@@ -100,11 +99,11 @@ class EditProfileMutations extends React.Component {
         toastr.success('We have updated your profile image!', 'Saved!');
 
       }).catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
 
     }).catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
 
 
